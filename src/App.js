@@ -1,25 +1,48 @@
-import logo from './logo.svg';
+import React, {useState} from 'react';
+import { InputGroup, FormControl, Button } from 'react-bootstrap';
 import './App.css';
 
-function App() {
+
+const App = () => {
+  const [linkText, setLinkText] = useState("");
+  const [shortLink, setShortLink] = useState("");
+
+  async function handleClick(e) {
+    e.preventDefault();
+    var response = await fetch('http://localhost:9000/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({link: linkText}),
+    })
+    var body = await response.json();
+    setShortLink(body.shortLink)
+  }
+
+  function handleChange(e) {
+    setLinkText(e.target.value);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <h1>Welcome to <strong><span style={{color: "#0b5ed7"}}>Shortlink Me</span></strong></h1>
+      <p>No signup necessary! Enter your URL below for a free shortened link you can use <strong>anywhere!</strong></p>
+            <InputGroup className="w-40 mx-auto">
+                <FormControl
+                onChange={handleChange}
+                name="url-to-shorten"
+                placeholder="URL"
+                aria-label="URL to shorten"
+                aria-describedby="basic-addon2"
+                />
+                <Button name="shorten-url-btn" onClick={handleClick} type="submit" variant="primary" id="button-addon2">Shorten URL</Button>
+            </InputGroup>
+            <a href={shortLink}>{shortLink}</a>
+      <p style={{fontSize: ".75rem"}}>Copyright 2021 @ Hope Olson Studio</p>
+    </>
+  )
 }
 
 export default App;
