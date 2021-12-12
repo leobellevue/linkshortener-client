@@ -9,7 +9,8 @@ const App = () => {
 
   async function handleClick(e) {
     e.preventDefault();
-    var response = await fetch('http://localhost:9000/', {
+    try {
+      var response = await fetch('http://localhost:9000/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -17,6 +18,11 @@ const App = () => {
       },
       body: JSON.stringify({link: linkText}),
     })
+  } catch (err) {
+    alert("Error adding new link, please email support at heols.linkshortener@gmail.com. Please include the date and approximate time you recieved the error.");
+    console.log(err);
+  }
+    
     var body = await response.json();
     setShortLink(body.shortLink)
   }
